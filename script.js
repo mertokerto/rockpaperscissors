@@ -1,68 +1,62 @@
-function getComputerChoice() {
-  let i = parseInt(Math.random() * (4 - 1) + 1)
-  return i
-}
-
-let userScore = 0
+const playerText = document.querySelector("#playerText")
+const computerText = document.querySelector("#computerText")
+const resultText = document.querySelector("#resultText")
+const choiceBtns = document.querySelectorAll(".choiceBtn")
+const score = document.querySelector("#score")
+const winner = document.querySelector("#winner")
+let player
+let computer
+let result
+let playerScore = 0
 let computerScore = 0
 
-function gameRound(computerChoice, userChoice) {
-  if (userChoice.toLowerCase() === "rock") {
-    switch (computerChoice) {
-      case 1:
-        return "It's a draw!"
-        break
-      case 2:
-        computerScore++
-        return "You lose. Paper beats rock."
-        break
-      case 3:
-        userScore++
-        return "You win! Rock beats scissors."
-        break
-    }
-  } else if (userChoice.toLowerCase() === "paper") {
-    switch (computerChoice) {
-      case 1:
-        userScore++
-        return "You win! Paper beats rock."
-        break
-      case 2:
-        return "It's a draw."
-        break
-      case 3:
-        computerScore++
-        return "You lose. Scissors beat paper."
-        break
-    }
-  } else if (userChoice.toLowerCase() === "scissors") {
-    switch (computerChoice) {
-      case 1:
-        computerScore++
-        return "You lose. Rock beats scissors."
-        break
-      case 2:
-        userScore++
-        return "You win! Scissors beat paper."
-        break
-      case 3:
-        return "It's a draw."
-        break
-    }
-  }
+choiceBtns.forEach((button) =>
+     button.addEventListener("click", () => {
+          player = button.textContent
+          computerTurn()
+          playerText.textContent = `Player: ${player}`
+          computerText.textContent = `Computer: ${computer}`
+          resultText.textContent = checkWinner()
+          score.textContent = getScore()
+     })
+)
+
+function computerTurn() {
+     const randNum = Math.floor(Math.random() * 3) + 1
+
+     switch (randNum) {
+          case 1:
+               computer = "ROCK"
+               break
+          case 2:
+               computer = "PAPER"
+               break
+          case 3:
+               computer = "SCISSORS"
+               break
+     }
+}
+function checkWinner() {
+     if (player == computer) {
+          return "Draw!"
+     } else if (computer == "ROCK") {
+          return player == "PAPER" ? "You Win!" : "You Lose!"
+     } else if (computer == "PAPER") {
+          return player == "SCISSORS" ? "You Win!" : "You Lose!"
+     } else if (computer == "SCISSORS") {
+          return player == "ROCK" ? "You Win!" : "You Lose!"
+     }
 }
 
-function game() {
-  for (let i = 1; i <= 5; i++) {
-    let userChoice = prompt("Please enter your choice")
-    let computerChoice = getComputerChoice()
-    if (userChoice.toLowerCase() !== "rock" && userChoice.toLowerCase() !== "paper" && userChoice.toLowerCase() !== "scissors") {
-      alert("Wrong input")
-    }
-    let result = gameRound(computerChoice, userChoice)
-    console.log(result)
-    console.log("Your score: " + userScore + "  Computer's score " + computerScore)
-  }
+function getScore() {
+     if (resultText.textContent == "You Win!") {
+          playerScore++
+     } else if (resultText.textContent == "You Lose!") {
+          computerScore++
+     } else if (computerScore == 5) {
+          winner.textContent = "Winner is Computer"
+     } else if (playerScore == 5) {
+          winner.textContent = "The winner is the player"
+     }
+     return `Player: ${playerScore} Computer: ${computerScore}`
 }
-
-game()
